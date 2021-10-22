@@ -5,14 +5,21 @@ import os
 import tempfile
 
 
-adapter = requests_mock.Adapter()
-url_test = 'https://ru.hexlet.io/courses'
+url_test = r'https://ru.hexlet.io/courses'
 data = 'data'
-adapter.register_uri('GET', url_test, text=data)
 
 
 def test_one():
-	with tempfile.TemporaryDirectory() as tmp:
-		path_to_file = page_loader(url_test, tmp)
-		assert path_to_file == os.path.join(tmp, 'ru-hexlet-io-courses.html')
-		
+    with tempfile.TemporaryDirectory() as tmp:
+        with requests_mock.Mocker() as m:
+            m.get(
+                url_test,
+                text=data
+            )
+            path_to_file = page_loader(
+                url_test,
+                tmp
+            )			
+            assert path_to_file == os.path.join(tmp, 'ru-hexlet-io-courses.html')
+            with open(path_to_file, "r") as file:
+                assert file.read() == data

@@ -1,5 +1,6 @@
 import os
 import re
+import requests
 
 
 def criet_name(url):
@@ -17,7 +18,6 @@ def criet_name(url):
     return name
 
 
-
 def safe_data(data, name, path_output):
     path = os.path.join(os.getcwd(), path_output)
     path_to_file = os.path.join(path, name)
@@ -27,7 +27,7 @@ def safe_data(data, name, path_output):
 
 
 def gat_data(url):
-    return "data"
+    return requests.get(url).text
 
 
 def page_loader(url, path_output):

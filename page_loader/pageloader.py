@@ -1,16 +1,33 @@
 import os
+import re
 
 
 def criet_name(url):
-    pass
+    """Берется адрес страницы без схемы
+    Все символы, кроме букв и цифр, заменяются на дефис -.
+    В конце ставится .html
+    https://ru.hexlet.io/courses
+    ru-hexlet-io-courses.html"""
+    name = url
+    shema = re.compile(r'.*://')
+    change = re.compile(r'[^A-Za-z0-9]')
+    name = shema.sub('', name, count=1)
+    name = change.sub('-', name)
+    name = '{}.html'.format(name)
+    return name
+
 
 
 def safe_data(data, name, path_output):
-    return os.join(path_output, name)
+    path = os.path.join(os.getcwd(), path_output)
+    path_to_file = os.path.join(path, name)
+    with open(path_to_file, 'w') as file:
+        file.write(data)
+    return os.path.join(path, name)
 
 
 def gat_data(url):
-    pass
+    return "data"
 
 
 def page_loader(url, path_output):

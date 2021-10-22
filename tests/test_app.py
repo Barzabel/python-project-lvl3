@@ -14,4 +14,5 @@ adapter.register_uri('GET', url_test, text=data)
 def test_one():
 	with tempfile.TemporaryDirectory() as tmp:
 		path_to_file = page_loader(url_test, tmp)
-		assert path_to_file == 'ru-hexlet-io-courses.html'
+		assert path_to_file == os.path.join(tmp, 'ru-hexlet-io-courses.html')
+		

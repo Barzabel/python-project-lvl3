@@ -8,6 +8,9 @@ build:
 package-install:
 	pip install --user dist/*.whl
 
+package-upgrade:
+	pip install --upgrade --user dist/*.whl
+
 lint:
 	poetry run flake8 page_loader
 

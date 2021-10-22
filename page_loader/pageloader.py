@@ -1,4 +1,2 @@
-
-
 def page_loader():
-	pass
+	print('Test')

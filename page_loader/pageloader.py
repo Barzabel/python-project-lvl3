@@ -31,6 +31,7 @@ def criet_name(url, type_file='dir'):
 def safe_data(name, data='', path_output='', type_file='html'):
     path = os.path.join(os.getcwd(), path_output)
     path_to_file = os.path.join(path, name)
+
     if type_file == 'html':
         with open(path_to_file, 'w') as file:
             file.write(data)
@@ -59,10 +60,14 @@ def gat_data(url, type_file='html'):
         return requests.get(url).content
 
 
-def load_img_in_html(path_html, url):
+def load_img_in_html(url, path_output, path_html):
     name = criet_name(url, type_file='dir')
     name_html = os.path.basename(path_html)
-    path_to_dir = safe_data(name=name, type_file='dir')
+    path_to_dir = safe_data(
+        name=name,
+        path_output=path_output,
+        type_file='dir'
+    )
     get_index_url = re.match(r'.*:\/\/.*?\/', url)
     clear_url = get_index_url.group(0)
 
@@ -88,7 +93,7 @@ def load_img_in_html(path_html, url):
     safe_data(
         name_html,
         data=soup.prettify(),
-        path_output='',
+        path_output=path_output,
         type_file='html'
     )
     return True
@@ -102,5 +107,5 @@ def page_loader(url, path_output):
         data=data,
         path_output=path_output
     )
-    load_img_in_html(path_to_file, url)
+    load_img_in_html(url, path_output, path_to_file)
     return path_to_file

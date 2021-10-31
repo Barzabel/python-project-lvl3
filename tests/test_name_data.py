@@ -7,14 +7,14 @@ import tempfile, shutil
 
 url_test = r'https://ru.hexlet.io/courses'
 url_test_img = r"https://ru.hexlet.iostatic/img/img1.png"
-with open("tests/fixtures/index.html", 'r') as file:
+with open("tests/fixtures/test1/index.html", 'r') as file:
     data = file.read()
 
-with open("tests/fixtures/rigt_answer.html", 'r') as file:
+with open("tests/fixtures/test1/rigt_answer.html", 'r') as file:
     right_answer_data = file.read()
 
 
-with open("tests/fixtures/static/img/img1.png", 'rb') as file:
+with open("tests/fixtures/test1/static/img/img1.png", 'rb') as file:
     img = file.read()
 
 

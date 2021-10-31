@@ -23,8 +23,12 @@ def criet_name(url, type_file='dir'):
         name = '{}_files'.format(name)
     elif type_file == "html":
         name = '{}.html'.format(name)
-    elif type_file == "png":
-        name = '{}.png'.format(name)
+    elif type_file == "img":
+        name = '{}.png'.format(name[:-4])
+    elif type_file == "js":
+        name = '{}.js'.format(name[:-3])
+    elif type_file == "css":
+        name = '{}.css'.format(name[:-4])
     return name
 
 
@@ -45,22 +49,39 @@ def safe_data(name, data='', path_output='', type_file='html'):
     elif type_file == 'img':
         with open(path_to_file, "wb") as file:
             file.write(data)
-
         relative_file_path_img = re.search(
             r'[^\/]*\/[^\/]*\.png',
             path_to_file
             ).group()
         return relative_file_path_img
+    elif type_file == 'css':
+        with open(path_to_file, "w") as file:
+            file.write(data)
+        relative_file_path_img = re.search(
+            r'[^\/]*\/[^\/]*\.css',
+            path_to_file
+            ).group()
+        return relative_file_path_img
+    elif type_file == 'js':
+        with open(path_to_file, "w") as file:
+            file.write(data)
+        relative_file_path_img = re.search(
+            r'[^\/]*\/[^\/]*\.js',
+            path_to_file
+            ).group()
+        return relative_file_path_img
 
 
-def gat_data(url, type_file='html'):
+def get_data(url, type_file='html'):
     if type_file == 'html':
         return requests.get(url).text
     elif type_file == 'img':
         return requests.get(url).content
+    elif type_file == 'js' or type_file == 'css':
+        return requests.get(url).text
 
 
-def load_img_in_html(url, path_output, path_html):
+def load_in_html(url, path_output, path_html):
     name = criet_name(url, type_file='dir')
     name_html = os.path.basename(path_html)
     path_to_dir = safe_data(
@@ -68,6 +89,7 @@ def load_img_in_html(url, path_output, path_html):
         path_output=path_output,
         type_file='dir'
     )
+
     get_index_url = re.match(r'.*:\/\/.*?\/', url)
     clear_url = get_index_url.group(0)
 
@@ -75,21 +97,29 @@ def load_img_in_html(url, path_output, path_html):
         contents = f.read()
         soup = BeautifulSoup(contents, 'html.parser')
 
-    for tag in soup.find_all("img"):
-        if re.match(r'.*:\/\/', tag['src']) is None:
-            url_img = "{}{}".format(clear_url[:-1], tag['src'])
-        else:
-            url_img = tag['src']
+    def _find_and_save_data(tag, type_file, atr='src'):
+        for tag in soup.find_all(tag):
+            val = tag.get(atr)
+            if val is not None and re.match(r'.*:\/\/', val) is None:
+                if type_file == 'css' and tag.get('rel') != ['stylesheet']:
+                    continue
+                url = "{}{}".format(clear_url[:-1], tag[atr])
+            else:
+                continue
 
-        data_img = gat_data(url_img, type_file='img')
-        name_img = criet_name(url_img, type_file='png')
-        new_src = safe_data(
-            name=name_img,
-            data=data_img,
-            path_output=path_to_dir,
-            type_file='img'
-        )
-        tag['src'] = new_src
+            data = get_data(url, type_file=type_file)
+            name = criet_name(url, type_file=type_file)
+            new_src = safe_data(
+                name=name,
+                data=data,
+                path_output=path_to_dir,
+                type_file=type_file
+            )
+            tag[atr] = new_src
+    _find_and_save_data(tag='img', type_file='img')
+    _find_and_save_data(tag='link', type_file='css', atr='href')
+    _find_and_save_data(tag='script', type_file='js')
+
     safe_data(
         name_html,
         data=soup.prettify(),
@@ -100,12 +130,12 @@ def load_img_in_html(url, path_output, path_html):
 
 
 def page_loader(url, path_output):
-    data = gat_data(url)
+    data = get_data(url)
     name = criet_name(url, 'html')
     path_to_file = safe_data(
         name,
         data=data,
         path_output=path_output
     )
-    load_img_in_html(url, path_output, path_to_file)
+    load_in_html(url, path_output, path_to_file)
     return path_to_file

@@ -2,6 +2,18 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
+from page_loader.logger import get_logger
+
+
+logger = get_logger(__name__)
+
+
+def is_dir_exist(output_dir):
+    '''    Check is directory exist
+    :param
+        output_dir: directory path
+    :return: True of False    '''
+    return os.path.exists(output_dir) and os.path.isdir(output_dir)
 
 
 def criet_name(url, type_file='dir'):
@@ -29,10 +41,18 @@ def criet_name(url, type_file='dir'):
         name = '{}.js'.format(name[:-3])
     elif type_file == "css":
         name = '{}.css'.format(name[:-4])
+    logger.info('making page_file_name or page_file_path {}'.format(name))
     return name
 
 
 def safe_data(name, data='', path_output='', type_file='html'):
+    logger.info('start safe_data with name={}, path_output={}, type_file={}\
+        '.format(
+            name,
+            path_output,
+            type_file
+        ))
+
     path = os.path.join(os.getcwd(), path_output)
     path_to_file = os.path.join(path, name)
 
@@ -130,6 +150,12 @@ def load_in_html(url, path_output, path_html):
 
 
 def page_loader(url, path_output):
+    logger.info('start func with pageurl:{}, output_dir:{}\
+        '.format(url, path_output))
+    if not is_dir_exist(path_output):
+        logger.warning("An output directory doesn't exist!")
+        raise NameError('Missing directory')
+
     data = get_data(url)
     name = criet_name(url, 'html')
     path_to_file = safe_data(
@@ -137,5 +163,6 @@ def page_loader(url, path_output):
         data=data,
         path_output=path_output
     )
+    logger.info('html with local links saved')
     load_in_html(url, path_output, path_to_file)
     return path_to_file

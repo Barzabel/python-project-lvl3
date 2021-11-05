@@ -1,6 +1,6 @@
 from page_loader.pageloader import page_loader
 from page_loader.cli import parser_argument
-
+from http.client import HTTPException
 
 def main():
     args = parser_argument()
@@ -8,4 +8,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit(2)
+    except OSError:
+        sys.exit(3)
+    except HTTPException:
+        sys.exit(4)

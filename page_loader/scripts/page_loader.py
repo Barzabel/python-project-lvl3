@@ -1,4 +1,4 @@
-from page_loader.download import page_loader
+from page_loader.download import download
 from page_loader.cli import parser_argument
 from http.client import HTTPException
 import sys
@@ -6,7 +6,7 @@ import sys
 
 def main():
     args = parser_argument()
-    print(page_loader(args.url, args.output))
+    print(download(args.url, args.output))
 
 
 if __name__ == '__main__':

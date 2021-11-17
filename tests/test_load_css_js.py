@@ -1,6 +1,6 @@
 import pytest
 import requests_mock
-from page_loader.download import  page_loader
+from page_loader import  download as page_loader
 import os
 import tempfile, shutil
 

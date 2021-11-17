@@ -149,7 +149,7 @@ def load_in_html(url, path_output, path_html):
     return True
 
 
-def page_loader(url, path_output):
+def download(url, path_output):
     logger.info('start func with pageurl:{}, output_dir:{}\
         '.format(url, path_output))
     if not is_dir_exist(path_output):

@@ -3,6 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from page_loader.logger import get_logger
+from http.client import HTTPException
 
 
 logger = get_logger(__name__)
@@ -99,6 +100,7 @@ def get_data(url, type_file='html'):
             url,
             req_data.status_code
             ))
+        raise HTTPException
     if type_file == 'html':
         return req_data.text
     elif type_file == 'img':

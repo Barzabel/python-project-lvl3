@@ -96,7 +96,10 @@ def get_data(url, type_file='html'):
     try:
         req_data = requests.get(url)
         if req_data.status_code > 299:
-            logging.exception("get_data url {}, status {}".format(url, req_data.status_code))
+            logger.exception("get_data url {}, status {}".format(
+                url,
+                req_data.status_code
+                ))
         if type_file == 'html':
             return req_data.text
         elif type_file == 'img':
@@ -104,8 +107,8 @@ def get_data(url, type_file='html'):
         elif type_file == 'js' or type_file == 'css':
             return req_data.text
 
-    except e:
-        logging.exception("get_data url {}, type_file{}".format(url, type_file))
+    except:  # noqa: E722
+        logger.exception("get_data url {}, type_file{}".format(url, type_file))
 
 
 def load_in_html(url, path_output, path_html):

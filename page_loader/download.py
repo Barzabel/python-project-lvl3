@@ -107,7 +107,6 @@ def get_data(url, type_file='html'):
         return req_data.text
 
 
-
 def load_in_html(url, path_output, path_html):
     name = criet_name(url, type_file='dir')
     name_html = os.path.basename(path_html)

@@ -93,22 +93,19 @@ def safe_data(name, data='', path_output='', type_file='html'):
 
 
 def get_data(url, type_file='html'):
-    try:
-        req_data = requests.get(url)
-        if req_data.status_code > 299:
-            logger.exception("get_data url {}, status {}".format(
-                url,
-                req_data.status_code
-                ))
-        if type_file == 'html':
-            return req_data.text
-        elif type_file == 'img':
-            return req_data.content
-        elif type_file == 'js' or type_file == 'css':
-            return req_data.text
+    req_data = requests.get(url)
+    if req_data.status_code > 299:
+        logger.exception("get_data url {}, status {}".format(
+            url,
+            req_data.status_code
+            ))
+    if type_file == 'html':
+        return req_data.text
+    elif type_file == 'img':
+        return req_data.content
+    elif type_file == 'js' or type_file == 'css':
+        return req_data.text
 
-    except:  # noqa: E722
-        logger.exception("get_data url {}, type_file{}".format(url, type_file))
 
 
 def load_in_html(url, path_output, path_html):

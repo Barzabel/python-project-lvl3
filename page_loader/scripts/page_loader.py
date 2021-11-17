@@ -1,4 +1,4 @@
-from page_loader.pageloader import page_loader
+from page_loader.download import page_loader
 from page_loader.cli import parser_argument
 from http.client import HTTPException
 import sys
